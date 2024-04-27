@@ -3,21 +3,26 @@ import State
 
 
 class Node:
+    """
+    Esta clase representa un nodo en un árbol de búsqueda.
+    Cada nodo tiene un estado, una acción que llevó a ese estado, una lista de acciones posibles, un nodo father,
+    una lista de nodos hijos, un precio, y diccionarios para heurísticas y values.
+    """
     def __init__(
             self,
             state: State,
             action: Action = None,
-            actions: list[Action] = None,
+            actions: list[Action] = [],
             father: 'Node' = None
     ):
-        self.state = state
-        self.action = action
-        self.actions = actions
-        self.padre = father
-        self.children = []
-        self.costo = 0
-        self.heuristicas = {}
-        self.valores = {}
+        self.state = state  # El estado del nodo
+        self.action = action  # La acción que llevó a este estado
+        self.actions = actions  # Las acciones posibles desde este estado
+        self.father = father  # El nodo father
+        self.children = []  # Los nodos hijos
+        self.price = 0  # El precio para llegar a este nodo
+        self.heuristics = {}  # Las heurísticas calculadas para este nodo
+        self.values = {}  # Los valores calculados para este nodo
 
     def __str__(self):
         return self.state.name
@@ -35,41 +40,41 @@ class Node:
             if nuevo_state.name in problem.actions.keys():
                 actions_nuevo = problem.actions[nuevo_state.name]
             child = Node(nuevo_state, action_child, actions_nuevo, self)
-            costo = self.padre.costo if self.padre else 0
-            costo += problem.costo_action(self.state, action_child)
-            child.costo = costo
-            child.heuristicas = problem.heuristicas[child.state.name]
-            child.valores = {state: heuristica + child.coste
+            price = self.father.price if self.father else 0
+            price += problem.price_action(self.state, action_child)
+            child.price = price
+            child.heuristics = problem.heuristics[child.state.name]
+            child.values = {state: heuristica + child.price
                              for state, heuristica
-                             in child.heuristicas.items()}
+                             in child.heuristics.items()}
             self.children.append(child)
         return self.children
 
-    def child_mejor(self, problem, metrica='valor', criterio='menor'):
+    def best_child(self, problem, metrica='valor', criterio='menor'):
         if not self.children:
             return None
         mejor = self.children[0]
         for child in self.children:
             for objetivo in problem.state_objetivo:
                 if metrica == 'valor':
-                    valor_child = child.valores[objetivo.name]
-                    valor_mejor = mejor.valores[objetivo.name]
+                    valor_child = child.values[objetivo.name]
+                    valor_mejor = mejor.values[objetivo.name]
                     if (criterio == 'menor' and valor_child < valor_mejor):
                         mejor = child
                     elif (criterio == 'mayor' and valor_child > valor_mejor):
                         mejor = child
                 elif metrica == 'heuristica':
-                    heuristica_child = child.heuristicas[objetivo.name]
-                    heuristica_mejor = mejor.heuristicas[objetivo.name]
+                    heuristica_child = child.heuristics[objetivo.name]
+                    heuristica_mejor = mejor.heuristics[objetivo.name]
                     if (criterio == 'menor' and heuristica_child < heuristica_mejor):
                         mejor = child
                     elif (criterio == 'mayor' and heuristica_child > heuristica_mejor):
                         mejor = child
-                elif metrica == 'costo':
-                    costo_camino_child = problem.costo_camino(child)
-                    costo_camino_mejor = problem.costo_camino(mejor)
-                    if (criterio == 'menor' and costo_camino_child < costo_camino_mejor):
+                elif metrica == 'price':
+                    price_camino_child = problem.price_camino(child)
+                    price_camino_mejor = problem.price_camino(mejor)
+                    if (criterio == 'menor' and price_camino_child < price_camino_mejor):
                         mejor = child
-                    elif (criterio == 'mayor' and costo_camino_child > costo_camino_mejor):
+                    elif (criterio == 'mayor' and price_camino_child > price_camino_mejor):
                         mejor = child
         return mejor
