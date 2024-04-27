@@ -1,4 +1,5 @@
 import Action
+import Problem
 import State
 
 
@@ -27,7 +28,7 @@ class Node:
     def __str__(self):
         return self.state.name
 
-    def expandir(self, problem):
+    def expand(self, problem: Problem):
         self.children = []
         if not self.actions:
             if self.state.name not in problem.actions.keys():

@@ -1,6 +1,10 @@
+import Node
+import State
+
+
 class Problem:
-    def __init__(self, initial_state, target_state,
-                 actions, price=None, heuristics=None):
+    def __init__(self, initial_state: State, target_state: State,
+                 actions: dict, price: dict = None, heuristics: dict = None):
         self.initial_state = initial_state
         self.target_state = target_state
         self.actions = actions
@@ -45,9 +49,9 @@ class Problem:
             return self.infinito
         return price_state[action.name]
 
-    def price_camino(self, nodo):
+    def path_price(self, node: Node):
         total = 0
-        while nodo.padre:
-            total += self.price_action(nodo.padre.state, nodo.action)
-            nodo = nodo.padre
+        while node.father:
+            total += self.price_action(node.father.state, node.action)
+            node = node.father
         return total
