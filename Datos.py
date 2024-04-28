@@ -88,7 +88,7 @@ class Datos:
             'Santa Fe': 236,
             'Dabeiba': 324,
             'Chigorodo': 396,
-            'Arboletes': 547 ,
+            'Arboletes': 547,
             'Barbosa': 215,
             'Yarumal': 363,
             'Cisneros': 247,
