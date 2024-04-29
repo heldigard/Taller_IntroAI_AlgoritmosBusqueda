@@ -116,7 +116,7 @@ class Datos:
             'Barbosa': 63,
             'Yarumal': 211,
             'Cisneros': 95,
-            'Amalfi': 446
+            'Amalfi': 446,
             'Maceo': 136,
             'Remedios': 207,
             'Caucasia': 305,
